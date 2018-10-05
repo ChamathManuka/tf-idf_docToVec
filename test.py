@@ -17,6 +17,7 @@ from sklearn.cluster import KMeans
 import os
 F0 = open('vec_output.txt', 'w');
 path = os.path.abspath(os.path.dirname(__file__))
+import math
 
 
 # Tokenizer to return stemmed words, we use this
@@ -31,7 +32,7 @@ def tokenize_and_stem(text_file):
 
 
 
-data = pd.read_csv(os.path.join(path, 'data\headlines_cleaned.txt'), names=['text'])
+data = pd.read_csv(os.path.join(path, 'doc.txt'), names=['text'])
 
 # text data in dataframe and removing stops words
 stop_words = set(stopwords.words('english'))
@@ -69,7 +70,7 @@ for z in range(0, len(terms)):
     sum += (vector_2[z]*vector_1[z])
     total_1 += (vector_1[z]*vector_1[z])
     total_2 += (vector_2[z] * vector_2[z])
-print(sum/(total_1*total_2))
+print(sum/(math.sqrt(total_1)*math.sqrt(total_2)))
 
 
 

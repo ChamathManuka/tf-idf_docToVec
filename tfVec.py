@@ -31,7 +31,7 @@ def tokenize_and_stem(text_file):
 
 
 
-data = pd.read_csv(os.path.join(path, 'data\headlines_cleaned.txt'), names=['text'])
+data = pd.read_csv(os.path.join(path, 'doc.txt'), names=['text'])
 
 # text data in dataframe and removing stops words
 stop_words = set(stopwords.words('english'))
@@ -47,22 +47,26 @@ tfidf_vectorizer = TfidfVectorizer(max_features=200000,
 
 # Fit the vectorizer to text data
 tfidf_matrix = tfidf_vectorizer.fit_transform(data['text'])
-print (tfidf_matrix)
+#print (tfidf_matrix)
 terms = tfidf_vectorizer.get_feature_names()
-print (len(terms))
+#print (len(terms))
 
 feature_names = tfidf_vectorizer.get_feature_names()
-print (feature_names)
-doc = 2
-feature_index = tfidf_matrix[doc,:].nonzero()[1]
+
+#print (feature_names)
 list_one = []
 list_words = []
-tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
-for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
-    #print(w, s)
-    list_one.append(s)
-    list_words.append(w)
 
+for doc in range(0, 997):
+    feature_index = tfidf_matrix[doc,:].nonzero()[1]
+    tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+    for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
+        #print(w, s)
+        list_one.append(s)
+        list_words.append(w)
+
+
+"""
 #print (list)
 list_two = []
 stat_var = list_one[0]
@@ -85,3 +89,36 @@ for x in range (0,len(list_main[1])):
     F0.write(list_words[x] + '\t')
     F0.write('\n')
 F0.close()
+"""
+#list(set(list_one))
+list_words = list(set(list_words))
+
+selected_feature_list = []
+selected_features_count = round(0.2 * len(list_words))
+for selected_features in range(selected_features_count, len(list_words)):
+
+   selected_feature_list.append(list_words)
+
+print(len(selected_feature_list))
+print(selected_feature_list[0])
+"""
+list_selected_one = []
+list_selected_words = []
+for doc in range(0, 997):
+    feature_index = tfidf_matrix[doc,:].nonzero()[1]
+    tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+    for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
+        for f in list_selected_words:
+            if(w == f):
+                list_selected_one.append(s)
+                list_selected_words.append(w)
+
+print(len(list(set(list_words))))
+print(len(list(set(list_one))))
+#print(len(list_one))
+"""
+#feature_names = tfidf_matrix.get_feature_names()
+corpus_index = [n for n in corpus]
+import pandas as pd
+df = pd.DataFrame(tfs.T.todense(), index=feature_names, columns=corpus_index)
+print(df)
